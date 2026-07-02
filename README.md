@@ -1,8 +1,18 @@
 # Central Routing
 
+[![Nginx](https://img.shields.io/badge/Nginx-Alpine-009639?style=flat-square&logo=nginx&logoColor=white)](https://nginx.org/)
+[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Docker Compose](https://img.shields.io/badge/Docker_Compose-v2-2496ED?style=flat-square&logo=docker&logoColor=white)](https://docs.docker.com/compose/)
+[![Linux](https://img.shields.io/badge/Platform-Linux-FCC624?style=flat-square&logo=linux&logoColor=black)](https://kernel.org/)
+[![TLS Ready](https://img.shields.io/badge/TLS-Let's_Encrypt_ready-F4B400?style=flat-square&logo=letsencrypt&logoColor=white)](https://letsencrypt.org/)
+[![License](https://img.shields.io/github/license/mach1el/routing?style=flat-square)](LICENSE)
+[![Last Commit](https://img.shields.io/github/last-commit/mach1el/routing?style=flat-square)](https://github.com/mach1el/routing/commits/master)
+[![Repository Size](https://img.shields.io/github/repo-size/mach1el/routing?style=flat-square)](https://github.com/mach1el/routing)
+[![Open Issues](https://img.shields.io/github/issues/mach1el/routing?style=flat-square)](https://github.com/mach1el/routing/issues)
+
 Central Nginx ingress for services on this host. Nginx is the only container
-that publishes an HTTP port; application containers are reached over the
-shared `routing` Docker network.
+that publishes public HTTP/HTTPS ports; application containers are reached over
+the shared `routing` Docker network.
 
 ## Current routes
 
