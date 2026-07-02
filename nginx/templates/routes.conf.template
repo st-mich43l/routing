@@ -1,0 +1,36 @@
+# HTTP bootstrap/local configuration. Production HTTPS uses
+# routes-tls.conf.template through docker-compose.prod.yml.
+resolver 127.0.0.11 valid=10s ipv6=off;
+
+map $http_upgrade $connection_upgrade {
+  default upgrade;
+  '' close;
+}
+
+server {
+  listen 80 default_server;
+  server_name _;
+
+  location = /_routing/health {
+    access_log off;
+    default_type text/plain;
+    return 200 "ok\n";
+  }
+
+  location / {
+    return 404;
+  }
+}
+
+server {
+  listen 80;
+  server_name ${VOID_OCCULT_HOST} ${VOID_OCCULT_LOCAL_HOST};
+
+  location ^~ /.well-known/acme-challenge/ {
+    root /var/www/certbot;
+    default_type text/plain;
+    try_files $uri =404;
+  }
+
+  include /etc/nginx/includes/void-occult-routes.conf;
+}

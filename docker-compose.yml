@@ -1,0 +1,40 @@
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: central-routing
+    restart: unless-stopped
+    ports:
+      - "${ROUTING_HTTP_PORT:-80}:80"
+    environment:
+      NGINX_ENVSUBST_FILTER: "^(VOID_OCCULT_HOST|VOID_OCCULT_LOCAL_HOST|VOID_OCCULT_CERT_NAME)$"
+      VOID_OCCULT_HOST: "${VOID_OCCULT_HOST:-stvoid.duckdns.org}"
+      VOID_OCCULT_LOCAL_HOST: "${VOID_OCCULT_LOCAL_HOST:-void-occult.localhost}"
+      VOID_OCCULT_CERT_NAME: "${VOID_OCCULT_CERT_NAME:-stvoid.duckdns.org}"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/templates/routes.conf.template:/etc/nginx/templates/routes.conf.template:ro
+      - ./nginx/includes:/etc/nginx/includes:ro
+      - ./certbot/www:/var/www/certbot:ro
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - wget -qO- http://127.0.0.1/_routing/health >/dev/null || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    networks:
+      - routing
+
+  certbot:
+    image: certbot/certbot:latest
+    profiles:
+      - tools
+    volumes:
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+
+networks:
+  routing:
+    name: "${ROUTING_NETWORK:-routing}"
+    driver: bridge
