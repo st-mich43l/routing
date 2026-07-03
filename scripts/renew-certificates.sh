@@ -11,7 +11,7 @@ if [ -f .env ]; then
   set +a
 fi
 
-DOMAIN=${VOID_OCCULT_HOST:-stvoid.duckdns.org}
+DOMAIN=${VOID_OCCULT_HOST:-apexvoid.net}
 CERT_NAME=${VOID_OCCULT_CERT_NAME:-$DOMAIN}
 
 if [ ! -s "certbot/conf/live/$CERT_NAME/fullchain.pem" ]; then

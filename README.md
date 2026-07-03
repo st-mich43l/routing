@@ -18,9 +18,9 @@ the shared `routing` Docker network.
 
 | Host | Path | Upstream |
 |---|---|---|
-| `stvoid.duckdns.org` / `void-occult.localhost` | `/` | `voidocc-frontend:80` |
-| `stvoid.duckdns.org` / `void-occult.localhost` | `/api/*` | `voidocc-backend:8000` |
-| `stvoid.duckdns.org` / `void-occult.localhost` | `/health` | `voidocc-backend:8000` |
+| `apexvoid.net` / `void-occult.localhost` | `/` | `voidocc-frontend:80` |
+| `apexvoid.net` / `void-occult.localhost` | `/api/*` | `voidocc-backend:8000` |
+| `apexvoid.net` / `void-occult.localhost` | `/health` | `voidocc-backend:8000` |
 | any configured host | `/_routing/health` | Nginx health response |
 
 Signal Bot is intentionally absent from the HTTP route table and does not need
@@ -41,7 +41,7 @@ docker compose -f ../void-occult/docker-compose.yml up -d --build
 docker compose -f ../signal-bot/docker-compose.yml up -d --build
 ```
 
-Open <https://stvoid.duckdns.org> from the internet or
+Open <https://apexvoid.net> from the internet or
 <http://void-occult.localhost> on the host. The `.localhost` suffix resolves
 locally in modern browsers without editing `/etc/hosts`.
 
@@ -80,7 +80,7 @@ Start the HTTP configuration first, then request the certificate:
 docker compose up -d
 docker compose run --rm certbot certonly \
   --webroot --webroot-path /var/www/certbot \
-  --domain stvoid.duckdns.org \
+  --domain apexvoid.net \
   --agree-tos --register-unsafely-without-email
 
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d

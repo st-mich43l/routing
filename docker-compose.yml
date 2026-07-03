@@ -7,9 +7,9 @@ services:
       - "${ROUTING_HTTP_PORT:-80}:80"
     environment:
       NGINX_ENVSUBST_FILTER: "^(VOID_OCCULT_HOST|VOID_OCCULT_LOCAL_HOST|VOID_OCCULT_CERT_NAME)$"
-      VOID_OCCULT_HOST: "${VOID_OCCULT_HOST:-stvoid.duckdns.org}"
+      VOID_OCCULT_HOST: "${VOID_OCCULT_HOST:-apexvoid.net}"
       VOID_OCCULT_LOCAL_HOST: "${VOID_OCCULT_LOCAL_HOST:-void-occult.localhost}"
-      VOID_OCCULT_CERT_NAME: "${VOID_OCCULT_CERT_NAME:-stvoid.duckdns.org}"
+      VOID_OCCULT_CERT_NAME: "${VOID_OCCULT_CERT_NAME:-apexvoid.net}"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/templates/routes.conf.template:/etc/nginx/templates/routes.conf.template:ro
