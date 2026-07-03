@@ -24,12 +24,6 @@ server {
   listen 80;
   server_name ${VOID_OCCULT_HOST};
 
-  location ^~ /.well-known/acme-challenge/ {
-    root /var/www/certbot;
-    default_type text/plain;
-    try_files $uri =404;
-  }
-
   location / {
     return 301 https://$host$request_uri;
   }
@@ -48,8 +42,8 @@ server {
   listen 443 ssl;
   server_name ${VOID_OCCULT_HOST};
 
-  ssl_certificate /etc/letsencrypt/live/${VOID_OCCULT_CERT_NAME}/fullchain.pem;
-  ssl_certificate_key /etc/letsencrypt/live/${VOID_OCCULT_CERT_NAME}/privkey.pem;
+  ssl_certificate /etc/ssl/duckdns/stvoid/fullchain.pem;
+  ssl_certificate_key /etc/ssl/duckdns/stvoid/privkey.pem;
   ssl_protocols TLSv1.2 TLSv1.3;
   ssl_session_cache shared:SSL:10m;
   ssl_session_timeout 1d;

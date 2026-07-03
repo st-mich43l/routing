@@ -26,11 +26,5 @@ server {
   listen 80;
   server_name ${VOID_OCCULT_HOST} ${VOID_OCCULT_LOCAL_HOST};
 
-  location ^~ /.well-known/acme-challenge/ {
-    root /var/www/certbot;
-    default_type text/plain;
-    try_files $uri =404;
-  }
-
   include /etc/nginx/includes/void-occult-routes.conf;
 }

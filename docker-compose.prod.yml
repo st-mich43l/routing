@@ -4,4 +4,4 @@ services:
       - "${ROUTING_HTTPS_PORT:-443}:443"
     volumes:
       - ./nginx/templates/routes-tls.conf.template:/etc/nginx/templates/routes.conf.template:ro
-      - ./certbot/conf:/etc/letsencrypt:ro
+      - ${ROUTING_CERT_DIR:-/etc/ssl/duckdns/stvoid}:/etc/ssl/duckdns/stvoid:ro

@@ -60,10 +60,10 @@ Copy `.env.example` to `.env` and change:
 - `ROUTING_HTTPS_PORT`: published TLS port, default `443`.
 - `ROUTING_NETWORK`: shared Docker network name. Use the same value in every
   application stack.
+- `ROUTING_CERT_DIR`: host directory containing `fullchain.pem` and
+  `privkey.pem`.
 - `VOID_OCCULT_HOST`: public Nginx `server_name`.
 - `VOID_OCCULT_LOCAL_HOST`: HTTP-only hostname for local development.
-- `VOID_OCCULT_CERT_NAME`: Let's Encrypt certificate directory name, normally
-  identical to the public hostname.
 
 After changing a host or an Nginx template, recreate the production router:
 
@@ -72,32 +72,56 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml \
   up -d --force-recreate
 ```
 
-## HTTPS bootstrap
+## VPS HTTPS setup
 
-Start the HTTP configuration first, then request the certificate:
+The setup script updates the DuckDNS address, installs a five-minute IP update
+job, obtains a Let's Encrypt certificate through DuckDNS DNS-01, and starts the
+production routing stack:
 
 ```bash
-docker compose up -d
-docker compose run --rm certbot certonly \
-  --webroot --webroot-path /var/www/certbot \
-  --domain stvoid.duckdns.org \
-  --agree-tos --register-unsafely-without-email
-
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+sudo bash letencrypt-setup.sh \
+  --domain stvoid \
+  --token YOUR_DUCKDNS_TOKEN \
+  --email you@example.com
 ```
 
-The production override publishes port 443, redirects the public HTTP hostname
-to HTTPS, and keeps `void-occult.localhost` available over HTTP.
+Run it from this repository on an Ubuntu/Debian VPS with Docker Compose v2
+already installed. It synchronizes `VOID_OCCULT_HOST` and `ROUTING_CERT_DIR` in
+the ignored `.env` file and mounts the certificate from
+`/etc/ssl/duckdns/<subdomain>`. If that directory already contains
+`fullchain.pem` and `privkey.pem`, the existing certificate is reused without a
+new issuance. The DuckDNS token is written only to a root-owned updater script
+under `/usr/local/bin`; it is not stored in this repository. Avoid committing
+or pasting a real token into `.env`, logs, or other scripts.
 
-Run `scripts/renew-certificates.sh` daily from cron. If initial issuance was
-blocked by a temporary DNS failure, the script retries it before enabling TLS.
-Afterward Certbot only renews when the certificate is near expiry, and Nginx
-reloads the renewed certificate.
+acme.sh installs its own daily renewal job. Renewed files are copied to the
+configured certificate directory and the routing container is reloaded
+automatically. To run the same renewal check manually:
+
+```bash
+sudo scripts/renew-certificates.sh
+```
+
+When the certificate already exists, connect it to Docker Nginx without
+contacting Let's Encrypt again:
+
+```bash
+sudo bash letencrypt-setup.sh \
+  --domain stvoid \
+  --reuse-existing
+```
+
+The rerun reuses the existing certificate and changes its renewal reload hook
+to the routing container.
+
+The production override publishes port 443, redirects the public HTTP hostname
+to HTTPS, and keeps `void-occult.localhost` available over HTTP. To issue one
+certificate for both the DuckDNS hostname and its subdomains, add `--wildcard`.
 
 ## Production notes
 
-Point public DNS at the host and allow inbound TCP ports 80 and 443. Port 80
-must remain reachable for HTTP-01 certificate renewal.
+Allow inbound TCP ports 80 and 443. Certificate issuance and renewal use
+DuckDNS DNS-01, so they do not depend on inbound port 80.
 
 Do not add public routes to databases, internal debug endpoints, or Signal Bot
 unless those services implement authentication and an explicit HTTP contract.
