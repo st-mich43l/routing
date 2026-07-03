@@ -1,4 +1,1 @@
 .env
-certbot/conf/
-certbot/renew.log
-certbot/www/.well-known/
