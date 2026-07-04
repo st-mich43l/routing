@@ -22,7 +22,7 @@ server {
 
 server {
   listen 80;
-  server_name ${VOID_OCCULT_HOST};
+  server_name ${VOID_OCCULT_HOST} ${FATE_HOST} ${TRADING_HOST};
 
   location ^~ /.well-known/acme-challenge/ {
     root /var/www/certbot;
@@ -46,7 +46,7 @@ server {
 
 server {
   listen 443 ssl;
-  server_name ${VOID_OCCULT_HOST};
+  server_name ${VOID_OCCULT_HOST} ${FATE_HOST};
 
   ssl_certificate /etc/letsencrypt/live/${VOID_OCCULT_CERT_NAME}/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/${VOID_OCCULT_CERT_NAME}/privkey.pem;
@@ -61,4 +61,23 @@ server {
   add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
   include /etc/nginx/includes/void-occult-routes.conf;
+}
+
+server {
+  listen 443 ssl;
+  server_name ${TRADING_HOST};
+
+  ssl_certificate /etc/letsencrypt/live/${VOID_OCCULT_CERT_NAME}/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/${VOID_OCCULT_CERT_NAME}/privkey.pem;
+  ssl_protocols TLSv1.2 TLSv1.3;
+  ssl_session_cache shared:SSL:10m;
+  ssl_session_timeout 1d;
+  ssl_session_tickets off;
+
+  add_header Strict-Transport-Security "max-age=31536000" always;
+  add_header X-Content-Type-Options "nosniff" always;
+  add_header X-Frame-Options "SAMEORIGIN" always;
+  add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+  include /etc/nginx/includes/trading-routes.conf;
 }

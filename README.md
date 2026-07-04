@@ -18,9 +18,10 @@ the shared `routing` Docker network.
 
 | Host | Path | Upstream |
 |---|---|---|
-| `apexvoid.net` / `void-occult.localhost` | `/` | `voidocc-frontend:80` |
-| `apexvoid.net` / `void-occult.localhost` | `/api/*` | `voidocc-backend:8000` |
-| `apexvoid.net` / `void-occult.localhost` | `/health` | `voidocc-backend:8000` |
+| `apexvoid.net` / `fate.apexvoid.net` / `void-occult.localhost` | `/` | `voidocc-frontend:80` |
+| `apexvoid.net` / `fate.apexvoid.net` / `void-occult.localhost` | `/api/*` | `voidocc-backend:8000` |
+| `apexvoid.net` / `fate.apexvoid.net` / `void-occult.localhost` | `/health` | `voidocc-backend:8000` |
+| `trading.apexvoid.net` | `/` | `apexvoid-trading-frontend:80` |
 | any configured host | `/_routing/health` | Nginx health response |
 
 Signal Bot is intentionally absent from the HTTP route table and does not need
@@ -62,8 +63,12 @@ Copy `.env.example` to `.env` and change:
   application stack.
 - `VOID_OCCULT_HOST`: public Nginx `server_name`.
 - `VOID_OCCULT_LOCAL_HOST`: HTTP-only hostname for local development.
+- `FATE_HOST`: public hostname for the Purple Star and I Ching service.
+- `TRADING_HOST`: public hostname for the trading knowledge base.
 - `VOID_OCCULT_CERT_NAME`: Let's Encrypt certificate directory name, normally
   identical to the public hostname.
+- `CERTBOT_ADDITIONAL_DOMAINS`: space-separated names added to the shared TLS
+  certificate.
 
 After changing a host or an Nginx template, recreate the production router:
 
@@ -81,6 +86,8 @@ docker compose up -d
 docker compose run --rm certbot certonly \
   --webroot --webroot-path /var/www/certbot \
   --domain apexvoid.net \
+  --domain fate.apexvoid.net \
+  --domain trading.apexvoid.net \
   --agree-tos --register-unsafely-without-email
 
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
