@@ -1,4 +1,8 @@
+# Deploy state lives under deployment-template/ (compose runs from there).
+# These are host-only and must never be committed or shipped by CI.
+deployment-template/.env
+deployment-template/certbot/
+
+# Keep ignoring legacy root paths in case an old checkout still has them.
 .env
-certbot/conf/
-certbot/renew.log
-certbot/www/.well-known/
+certbot/
