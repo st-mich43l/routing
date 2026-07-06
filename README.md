@@ -24,10 +24,10 @@ the shared `routing` Docker network.
 | `trading.apexvoid.net` | `/` | `apexvoid-trading-frontend:80` |
 | any configured host | `/_routing/health` | Nginx health response |
 
-Signal Bot is intentionally absent from the HTTP route table and does not need
-the shared network. It uses outbound Telegram long-polling and does not run an
-HTTP server. Add a route only after the bot gains a real health, metrics, or
-webhook listener.
+The trading bot (`apexvoid-trading-bot`) is intentionally absent from the HTTP
+route table and does not need the shared network. It uses outbound Telegram
+long-polling and does not run an HTTP server. Add a route only after the bot
+gains a real health, metrics, or webhook listener.
 
 ## Start locally
 
@@ -38,8 +38,9 @@ application stack:
 cp .env.example .env
 docker compose up -d
 
-docker compose -f ../void-occult/docker-compose.yml up -d --build
-docker compose -f ../signal-bot/docker-compose.yml up -d --build
+docker compose -f ../apexvoid-occult/docker-compose.yml up -d --build
+docker compose -f ../apexvoid-trading/docker-compose.yml up -d --build
+docker compose -f ../apexvoid-trading-bot/docker-compose.yml up -d --build
 ```
 
 Open <https://apexvoid.net> from the internet or
@@ -106,5 +107,5 @@ reloads the renewed certificate.
 Point public DNS at the host and allow inbound TCP ports 80 and 443. Port 80
 must remain reachable for HTTP-01 certificate renewal.
 
-Do not add public routes to databases, internal debug endpoints, or Signal Bot
-unless those services implement authentication and an explicit HTTP contract.
+Do not add public routes to databases, internal debug endpoints, or the trading
+bot unless those services implement authentication and an explicit HTTP contract.
