@@ -18,9 +18,9 @@ the shared `routing` Docker network.
 
 | Host | Path | Upstream |
 |---|---|---|
-| `apexvoid.net` / `fate.apexvoid.net` / `void-occult.localhost` | `/` | `voidocc-frontend:80` |
-| `apexvoid.net` / `fate.apexvoid.net` / `void-occult.localhost` | `/api/*` | `voidocc-backend:8000` |
-| `apexvoid.net` / `fate.apexvoid.net` / `void-occult.localhost` | `/health` | `voidocc-backend:8000` |
+| `apexvoid.net` / `fate.apexvoid.net` / `void-occult.localhost` | `/` | `apexvoid-occult-frontend:80` |
+| `apexvoid.net` / `fate.apexvoid.net` / `void-occult.localhost` | `/api/*` | `apexvoid-occult-backend:8000` |
+| `apexvoid.net` / `fate.apexvoid.net` / `void-occult.localhost` | `/health` | `apexvoid-occult-backend:8000` |
 | `trading.apexvoid.net` | `/` | `apexvoid-trading-frontend:80` |
 | any configured host | `/_routing/health` | Nginx health response |
 
