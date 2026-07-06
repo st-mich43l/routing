@@ -31,16 +31,20 @@ gains a real health, metrics, or webhook listener.
 
 ## Start locally
 
+All deployable files live under `deployment-template/` — this is exactly what
+CI ships to the VPS. Run compose commands from inside that directory.
+
 Start the router first so Docker creates the shared network, then start each
 application stack:
 
 ```bash
+cd deployment-template
 cp .env.example .env
 docker compose up -d
 
-docker compose -f ../apexvoid-occult/docker-compose.yml up -d --build
-docker compose -f ../apexvoid-trading/docker-compose.yml up -d --build
-docker compose -f ../apexvoid-trading-bot/docker-compose.yml up -d --build
+docker compose -f ../../apexvoid-occult/docker-compose.yml up -d --build
+docker compose -f ../../apexvoid-trading/docker-compose.yml up -d --build
+docker compose -f ../../apexvoid-trading-bot/docker-compose.yml up -d --build
 ```
 
 Open <https://apexvoid.net> from the internet or
@@ -74,6 +78,7 @@ Copy `.env.example` to `.env` and change:
 After changing a host or an Nginx template, recreate the production router:
 
 ```bash
+cd deployment-template
 docker compose -f docker-compose.yml -f docker-compose.prod.yml \
   up -d --force-recreate
 ```
@@ -83,6 +88,7 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml \
 Start the HTTP configuration first, then request the certificate:
 
 ```bash
+cd deployment-template
 docker compose up -d
 docker compose run --rm certbot certonly \
   --webroot --webroot-path /var/www/certbot \
@@ -97,10 +103,32 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 The production override publishes port 443, redirects the public HTTP hostname
 to HTTPS, and keeps `void-occult.localhost` available over HTTP.
 
-Run `scripts/renew-certificates.sh` daily from cron. If initial issuance was
+Run `deployment-template/scripts/renew-certificates.sh` daily from cron. If initial issuance was
 blocked by a temporary DNS failure, the script retries it before enabling TLS.
 Afterward Certbot only renews when the certificate is near expiry, and Nginx
 reloads the renewed certificate.
+
+## Deployment (CI)
+
+Pushes to `master` that touch `deployment-template/**` trigger
+[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which calls the
+shared reusable workflow in
+[`mach1el/action-library`](https://github.com/mach1el/action-library). CI
+`rsync`s `deployment-template/` to `/home/apexvoid/deployment/routing` on the VPS and runs
+`docker compose ... up -d`. The rsync excludes `.env` and `certbot/`, so
+host-only config and TLS keys are never overwritten or deleted.
+
+Configure once in the repo (**Settings → Secrets and variables → Actions**):
+
+| Kind | Name | Sensitive | Value |
+|------|------|-----------|-------|
+| Variable | `DEPLOY_HOST` | no | VPS IP or DNS name |
+| Variable | `DEPLOY_USER` | no | SSH deploy user |
+| Variable | `DEPLOY_PORT` | no | SSH port (optional, defaults to 22) |
+| Secret | `DEPLOY_SSH_KEY` | **yes** | Private key of the deploy user |
+
+The deploy user must be in the `docker` group and have its public key in the
+VPS `~/.ssh/authorized_keys`.
 
 ## Production notes
 

@@ -1,0 +1,22 @@
+name: Deploy
+
+# Deploys via the shared Ansible playbooks in mach1el/ansible-library.
+# All deploy config for "routing" lives in ansible-library group_vars; the only
+# secret this repo needs is the Ansible vault password.
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "deployment-template/**"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    uses: mach1el/action-library/.github/workflows/deploy-ansible.yml@master
+    with:
+      project: routing
+    secrets:
+      vault-password: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
+      # ansible-library-token: ${{ secrets.ANSIBLE_LIBRARY_TOKEN }}  # only if ansible-library is private
