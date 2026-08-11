@@ -5,10 +5,10 @@
 [![Docker Compose](https://img.shields.io/badge/Docker_Compose-v2-2496ED?style=flat-square&logo=docker&logoColor=white)](https://docs.docker.com/compose/)
 [![Linux](https://img.shields.io/badge/Platform-Linux-FCC624?style=flat-square&logo=linux&logoColor=black)](https://kernel.org/)
 [![TLS Ready](https://img.shields.io/badge/TLS-Let's_Encrypt_ready-F4B400?style=flat-square&logo=letsencrypt&logoColor=white)](https://letsencrypt.org/)
-[![License](https://img.shields.io/github/license/mach1el/routing?style=flat-square)](LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/mach1el/routing?style=flat-square)](https://github.com/mach1el/routing/commits/master)
-[![Repository Size](https://img.shields.io/github/repo-size/mach1el/routing?style=flat-square)](https://github.com/mach1el/routing)
-[![Open Issues](https://img.shields.io/github/issues/mach1el/routing?style=flat-square)](https://github.com/mach1el/routing/issues)
+[![License](https://img.shields.io/github/license/st-mich43l/routing?style=flat-square)](LICENSE)
+[![Last Commit](https://img.shields.io/github/last-commit/st-mich43l/routing?style=flat-square)](https://github.com/st-mich43l/routing/commits/master)
+[![Repository Size](https://img.shields.io/github/repo-size/st-mich43l/routing?style=flat-square)](https://github.com/st-mich43l/routing)
+[![Open Issues](https://img.shields.io/github/issues/st-mich43l/routing?style=flat-square)](https://github.com/st-mich43l/routing/issues)
 
 Central Nginx ingress for services on this host. Nginx is the only container
 that publishes public HTTP/HTTPS ports; application containers are reached over
@@ -121,7 +121,7 @@ reloads the renewed certificate.
 Pushes to `master` that touch `deployment-template/**` trigger
 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which calls the
 shared reusable workflow in
-[`mach1el/action-library`](https://github.com/mach1el/action-library). CI
+[`st-mich43l/action-library`](https://github.com/st-mich43l/action-library). CI
 `rsync`s `deployment-template/` to `/home/apexvoid/deployment/routing` on the VPS and runs
 `docker compose ... up -d`. The rsync excludes `.env` and `certbot/`, so
 host-only config and TLS keys are never overwritten or deleted.
