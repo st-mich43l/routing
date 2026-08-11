@@ -5,10 +5,10 @@
 [![Docker Compose](https://img.shields.io/badge/Docker_Compose-v2-2496ED?style=flat-square&logo=docker&logoColor=white)](https://docs.docker.com/compose/)
 [![Linux](https://img.shields.io/badge/Platform-Linux-FCC624?style=flat-square&logo=linux&logoColor=black)](https://kernel.org/)
 [![TLS Ready](https://img.shields.io/badge/TLS-Let's_Encrypt_ready-F4B400?style=flat-square&logo=letsencrypt&logoColor=white)](https://letsencrypt.org/)
-[![License](https://img.shields.io/github/license/mach1el/routing?style=flat-square)](LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/mach1el/routing?style=flat-square)](https://github.com/mach1el/routing/commits/master)
-[![Repository Size](https://img.shields.io/github/repo-size/mach1el/routing?style=flat-square)](https://github.com/mach1el/routing)
-[![Open Issues](https://img.shields.io/github/issues/mach1el/routing?style=flat-square)](https://github.com/mach1el/routing/issues)
+[![License](https://img.shields.io/github/license/st-mich43l/routing?style=flat-square)](LICENSE)
+[![Last Commit](https://img.shields.io/github/last-commit/st-mich43l/routing?style=flat-square)](https://github.com/st-mich43l/routing/commits/master)
+[![Repository Size](https://img.shields.io/github/repo-size/st-mich43l/routing?style=flat-square)](https://github.com/st-mich43l/routing)
+[![Open Issues](https://img.shields.io/github/issues/st-mich43l/routing?style=flat-square)](https://github.com/st-mich43l/routing/issues)
 
 Central Nginx ingress for services on this host. Nginx is the only container
 that publishes public HTTP/HTTPS ports; application containers are reached over
@@ -22,6 +22,8 @@ the shared `routing` Docker network.
 | `apexvoid.net` / `fate.apexvoid.net` / `void-occult.localhost` | `/api/*` | `apexvoid-occult-backend:8000` |
 | `apexvoid.net` / `fate.apexvoid.net` / `void-occult.localhost` | `/health` | `apexvoid-occult-backend:8000` |
 | `trading.apexvoid.net` | `/` | `apexvoid-trading-frontend:80` |
+| `ledger.apexvoid.net` | `/` | `apexvoid-ledger-frontend:80` |
+| `ledger.apexvoid.net` | `/api/*` | `apexvoid-ledger-backend:4000` |
 | any configured host | `/_routing/health` | Nginx health response |
 
 The trading bot (`apexvoid-trading-bot`) is intentionally absent from the HTTP
@@ -47,6 +49,10 @@ docker compose -f ../../apexvoid-trading/docker-compose.yml up -d --build
 docker compose -f ../../apexvoid-trading-bot/docker-compose.yml up -d --build
 ```
 
+`apexvoid-ledger` has no local-dev compose file of its own (its
+`deployment-template/docker-compose.yml.j2` is rendered by Ansible on
+deploy, not run directly) — see that repo's README for local dev.
+
 Open <https://apexvoid.net> from the internet or
 <http://void-occult.localhost> on the host. The `.localhost` suffix resolves
 locally in modern browsers without editing `/etc/hosts`.
@@ -70,6 +76,7 @@ Copy `.env.example` to `.env` and change:
 - `VOID_OCCULT_LOCAL_HOST`: HTTP-only hostname for local development.
 - `FATE_HOST`: public hostname for the Purple Star and I Ching service.
 - `TRADING_HOST`: public hostname for the trading knowledge base.
+- `LEDGER_HOST`: public hostname for the personal loan dashboard.
 - `VOID_OCCULT_CERT_NAME`: Let's Encrypt certificate directory name, normally
   identical to the public hostname.
 - `CERTBOT_ADDITIONAL_DOMAINS`: space-separated names added to the shared TLS
@@ -95,6 +102,7 @@ docker compose run --rm certbot certonly \
   --domain apexvoid.net \
   --domain fate.apexvoid.net \
   --domain trading.apexvoid.net \
+  --domain ledger.apexvoid.net \
   --agree-tos --register-unsafely-without-email
 
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
@@ -113,7 +121,7 @@ reloads the renewed certificate.
 Pushes to `master` that touch `deployment-template/**` trigger
 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which calls the
 shared reusable workflow in
-[`mach1el/action-library`](https://github.com/mach1el/action-library). CI
+[`st-mich43l/action-library`](https://github.com/st-mich43l/action-library). CI
 `rsync`s `deployment-template/` to `/home/apexvoid/deployment/routing` on the VPS and runs
 `docker compose ... up -d`. The rsync excludes `.env` and `certbot/`, so
 host-only config and TLS keys are never overwritten or deleted.
