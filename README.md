@@ -66,7 +66,16 @@ curl -fsS http://void-occult.localhost/health
 
 ## Configuration
 
-Copy `.env.example` to `.env` and change:
+> [!IMPORTANT]
+> In production, `.env` is **machine-managed** — [`ansible-library`](https://github.com/st-mich43l/ansible-library)
+> renders it fresh on every deploy from `inventory/group_vars/all/vars.yml`'s
+> `projects.routing.env_vars`, so it can never silently drift from what's
+> declared there (which is exactly what caused `ledger.apexvoid.net` to be
+> missing from `renew-certificates.sh`'s domain list after it was added here
+> but not there). **Change a domain or port in `ansible-library`, not by
+> hand-editing `.env` on the host** — the next deploy overwrites it.
+
+For local dev only, copy `.env.example` to `.env` and change:
 
 - `ROUTING_HTTP_PORT`: published host port, default `80`.
 - `ROUTING_HTTPS_PORT`: published TLS port, default `443`.
