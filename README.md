@@ -22,6 +22,8 @@ the shared `routing` Docker network.
 | `apexvoid.net` / `fate.apexvoid.net` / `void-occult.localhost` | `/api/*` | `apexvoid-occult-backend:8000` |
 | `apexvoid.net` / `fate.apexvoid.net` / `void-occult.localhost` | `/health` | `apexvoid-occult-backend:8000` |
 | `trading.apexvoid.net` | `/` | `apexvoid-trading-frontend:80` |
+| `ledger.apexvoid.net` | `/` | `apexvoid-ledger-frontend:80` |
+| `ledger.apexvoid.net` | `/api/*` | `apexvoid-ledger-backend:4000` |
 | any configured host | `/_routing/health` | Nginx health response |
 
 The trading bot (`apexvoid-trading-bot`) is intentionally absent from the HTTP
@@ -47,6 +49,10 @@ docker compose -f ../../apexvoid-trading/docker-compose.yml up -d --build
 docker compose -f ../../apexvoid-trading-bot/docker-compose.yml up -d --build
 ```
 
+`apexvoid-ledger` has no local-dev compose file of its own (its
+`deployment-template/docker-compose.yml.j2` is rendered by Ansible on
+deploy, not run directly) — see that repo's README for local dev.
+
 Open <https://apexvoid.net> from the internet or
 <http://void-occult.localhost> on the host. The `.localhost` suffix resolves
 locally in modern browsers without editing `/etc/hosts`.
@@ -70,6 +76,7 @@ Copy `.env.example` to `.env` and change:
 - `VOID_OCCULT_LOCAL_HOST`: HTTP-only hostname for local development.
 - `FATE_HOST`: public hostname for the Purple Star and I Ching service.
 - `TRADING_HOST`: public hostname for the trading knowledge base.
+- `LEDGER_HOST`: public hostname for the personal loan dashboard.
 - `VOID_OCCULT_CERT_NAME`: Let's Encrypt certificate directory name, normally
   identical to the public hostname.
 - `CERTBOT_ADDITIONAL_DOMAINS`: space-separated names added to the shared TLS
@@ -95,6 +102,7 @@ docker compose run --rm certbot certonly \
   --domain apexvoid.net \
   --domain fate.apexvoid.net \
   --domain trading.apexvoid.net \
+  --domain ledger.apexvoid.net \
   --agree-tos --register-unsafely-without-email
 
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
