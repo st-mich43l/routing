@@ -17,6 +17,8 @@ jobs:
     uses: st-mich43l/action-library/.github/workflows/deploy-ansible.yml@master
     with:
       project: routing
+      # Includes the deploy-user cron fix; update deliberately with shared role changes.
+      ansible-library-ref: 69c23e18ca7898c046966a7b03af239f13e76fab
     secrets:
       vault-password: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
       # ansible-library-token: ${{ secrets.ANSIBLE_LIBRARY_TOKEN }}  # only if ansible-library is private
