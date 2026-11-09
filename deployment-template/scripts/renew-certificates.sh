@@ -13,7 +13,7 @@ fi
 
 DOMAIN=${VOID_OCCULT_HOST:-apexvoid.net}
 CERT_NAME=${VOID_OCCULT_CERT_NAME:-$DOMAIN}
-ADDITIONAL_DOMAINS=${CERTBOT_ADDITIONAL_DOMAINS:-fate.apexvoid.net trading.apexvoid.net}
+ADDITIONAL_DOMAINS=${CERTBOT_ADDITIONAL_DOMAINS:-fate.apexvoid.net trading.apexvoid.net ledger.apexvoid.net}
 CERT_PATH="certbot/conf/live/$CERT_NAME/fullchain.pem"
 
 set -- --domain "$DOMAIN"
