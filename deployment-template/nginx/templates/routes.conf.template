@@ -8,6 +8,7 @@ map $http_upgrade $connection_upgrade {
 }
 
 server {
+  include /etc/nginx/includes/request-protection.conf;
   listen 80 default_server;
   server_name _;
 
@@ -23,6 +24,7 @@ server {
 }
 
 server {
+  include /etc/nginx/includes/request-protection.conf;
   listen 80;
   server_name ${VOID_OCCULT_HOST} ${FATE_HOST} ${VOID_OCCULT_LOCAL_HOST};
 
@@ -36,6 +38,7 @@ server {
 }
 
 server {
+  include /etc/nginx/includes/request-protection.conf;
   listen 80;
   server_name ${TRADING_HOST};
 
@@ -49,6 +52,7 @@ server {
 }
 
 server {
+  include /etc/nginx/includes/request-protection.conf;
   listen 80;
   server_name ${LEDGER_HOST};
 

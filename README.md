@@ -154,3 +154,15 @@ must remain reachable for HTTP-01 certificate renewal.
 
 Do not add public routes to databases, internal debug endpoints, or the trading
 bot unless those services implement authentication and an explicit HTTP contract.
+
+## Request protection
+
+Routing rejects common sensitive-file and PHP/WordPress scanner paths with 404
+before forwarding them to applications. Requests forwarded to applications are limited per direct client IP to 15
+requests per second with a burst of 60; excess requests receive 429. Immediate
+HTTP redirects and blocked probes are returned before the rate limiter runs.
+The ACME challenge and routing health path are exempt. These limits apply across
+hostnames and can affect clients sharing an IP during sustained bursts. They do
+not prevent distributed attacks or replace application authentication. If a
+trusted reverse proxy is added, configure its real IP handling explicitly before
+using these limits.
