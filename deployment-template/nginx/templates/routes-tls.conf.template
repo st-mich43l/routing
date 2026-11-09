@@ -6,6 +6,7 @@ map $http_upgrade $connection_upgrade {
 }
 
 server {
+  include /etc/nginx/includes/request-protection.conf;
   listen 80 default_server;
   server_name _;
 
@@ -21,6 +22,7 @@ server {
 }
 
 server {
+  include /etc/nginx/includes/request-protection.conf;
   listen 80;
   server_name ${VOID_OCCULT_HOST} ${FATE_HOST} ${TRADING_HOST} ${LEDGER_HOST};
 
@@ -38,6 +40,7 @@ server {
 # Keep the local development hostname available over HTTP. It is never covered
 # by the public certificate and should not be redirected to HTTPS.
 server {
+  include /etc/nginx/includes/request-protection.conf;
   listen 80;
   server_name ${VOID_OCCULT_LOCAL_HOST};
 
@@ -45,6 +48,7 @@ server {
 }
 
 server {
+  include /etc/nginx/includes/request-protection.conf;
   listen 443 ssl;
   server_name ${VOID_OCCULT_HOST} ${FATE_HOST};
 
@@ -64,6 +68,7 @@ server {
 }
 
 server {
+  include /etc/nginx/includes/request-protection.conf;
   listen 443 ssl;
   server_name ${TRADING_HOST};
 
@@ -83,6 +88,7 @@ server {
 }
 
 server {
+  include /etc/nginx/includes/request-protection.conf;
   listen 443 ssl;
   server_name ${LEDGER_HOST};
 
