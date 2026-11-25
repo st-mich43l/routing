@@ -17,8 +17,10 @@ jobs:
     uses: st-mich43l/action-library/.github/workflows/deploy-ansible.yml@master
     with:
       project: routing
-      # Includes the deploy-user cron fix; update deliberately with shared role changes.
-      ansible-library-ref: 69c23e18ca7898c046966a7b03af239f13e76fab
+      # Pinned on purpose: bump it whenever routing's vars change in ansible-library
+      # (hostnames, certificate domains), or the deploy keeps rendering the old .env.
+      # 8038980 = deploy-user cron fix + photobooth.apexvoid.net (ansible-library #161).
+      ansible-library-ref: 8038980e565dffb486a83ee2de3cf8c7c5a37dd6
     secrets:
       vault-password: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
       # ansible-library-token: ${{ secrets.ANSIBLE_LIBRARY_TOKEN }}  # only if ansible-library is private

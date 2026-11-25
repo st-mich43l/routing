@@ -138,6 +138,11 @@ shared reusable workflow in
 `docker compose ... up -d`. The rsync excludes `.env` and `certbot/`, so
 host-only config and TLS keys are never overwritten or deleted.
 
+The deploy uses a **pinned commit** of `ansible-library` (`ansible-library-ref`
+in `deploy.yml`). After changing routing's hostnames or certificate domains in
+`ansible-library`, bump that ref here too; otherwise the deploy renders the old
+`.env` and `renew-certificates.sh` never requests the new name.
+
 Configure once in the repo (**Settings → Secrets and variables → Actions**):
 
 | Kind | Name | Sensitive | Value |
