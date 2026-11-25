@@ -25,6 +25,7 @@ the shared `routing` Docker network.
 | `ledger.apexvoid.net` | `/` | `apexvoid-ledger-frontend:80` |
 | `ledger.apexvoid.net` | `/api/*` | `apexvoid-ledger-backend:4000` |
 | `photobooth.apexvoid.net` | `/` | `apexvoid-photobooth-webpage:80` (static product website) |
+| `photobooth.apexvoid.net` | `/downloads/` | `apexvoid-photobooth-webpage:80` (release files; streamed, not spooled to router disk) |
 | any configured host | `/_routing/health` | Nginx health response |
 
 The trading bot (`apexvoid-trading-bot`) is intentionally absent from the HTTP
