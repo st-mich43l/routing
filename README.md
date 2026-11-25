@@ -24,6 +24,7 @@ the shared `routing` Docker network.
 | `trading.apexvoid.net` | `/` | `apexvoid-trading-frontend:80` |
 | `ledger.apexvoid.net` | `/` | `apexvoid-ledger-frontend:80` |
 | `ledger.apexvoid.net` | `/api/*` | `apexvoid-ledger-backend:4000` |
+| `photobooth.apexvoid.net` | `/` | `apexvoid-photobooth-webpage:80` (static product website) |
 | any configured host | `/_routing/health` | Nginx health response |
 
 The trading bot (`apexvoid-trading-bot`) is intentionally absent from the HTTP
@@ -86,6 +87,7 @@ For local dev only, copy `.env.example` to `.env` and change:
 - `FATE_HOST`: public hostname for the Purple Star and I Ching service.
 - `TRADING_HOST`: public hostname for the trading knowledge base.
 - `LEDGER_HOST`: public hostname for the personal loan dashboard.
+- `PHOTOBOOTH_HOST`: public hostname for the ApexVoid Photobooth product website.
 - `VOID_OCCULT_CERT_NAME`: Let's Encrypt certificate directory name, normally
   identical to the public hostname.
 - `CERTBOT_ADDITIONAL_DOMAINS`: space-separated names added to the shared TLS
@@ -112,6 +114,7 @@ docker compose run --rm certbot certonly \
   --domain fate.apexvoid.net \
   --domain trading.apexvoid.net \
   --domain ledger.apexvoid.net \
+  --domain photobooth.apexvoid.net \
   --agree-tos --register-unsafely-without-email
 
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d

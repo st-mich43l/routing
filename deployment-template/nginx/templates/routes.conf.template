@@ -64,3 +64,17 @@ server {
 
   include /etc/nginx/includes/apexvoid-ledger-routes.conf;
 }
+
+server {
+  include /etc/nginx/includes/request-protection.conf;
+  listen 80;
+  server_name ${PHOTOBOOTH_HOST};
+
+  location ^~ /.well-known/acme-challenge/ {
+    root /var/www/certbot;
+    default_type text/plain;
+    try_files $uri =404;
+  }
+
+  include /etc/nginx/includes/apexvoid-photobooth-routes.conf;
+}
